@@ -53,6 +53,7 @@ function RefreshAccount (account, since)
         market = position.exchange,
         name = position.symbol,
         price = position.current_price,
+        purchasePrice = position.cost_basis / position.qty,
         quantity = position.qty,
         securityNumber = position.symbol
       }
