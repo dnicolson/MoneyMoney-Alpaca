@@ -1,4 +1,4 @@
-WebBanking{version     = 0.1,
+WebBanking{version     = 0.2,
            url         = "https://alpaca.markets/",
            services    = {"Alpaca"},
            description = "Cash balance and securities portfolio from Alpaca"}
@@ -41,7 +41,17 @@ end
 function RefreshAccount (account, since)
   if account.type == AccountTypeGiro then
     local response = apiRequest("account")
-    return { balance=response["cash"], transactions={} }
+    local cash = response["cash"]
+
+    if cash ~= account.balance then
+      local transaction = {
+        bookingDate = os.time(),
+        purpose = "Cash",
+        amount = cash
+      }
+
+      return { balance=cash, transactions={transaction} }
+    end
   elseif account.type == AccountTypePortfolio then
     local response = apiRequest("positions")
     local s = {}
